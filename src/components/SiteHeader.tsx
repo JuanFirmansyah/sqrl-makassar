@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Globe, Menu, X } from "lucide-react";
@@ -40,21 +41,16 @@ const NAV_LABELS: Record<Language, Record<NavKey, string>> = {
 };
 
 /* ============================================================
-   EXTERNAL LINKS — dipakai untuk CTA
+   EXTERNAL LINKS
    ============================================================ */
-const GOOGLE_FORM = "https://forms.gle/REPLACE_WITH_YOUR_FORM_ID";
+const DEFAULT_FORM_URL = "https://forms.gle/REPLACE_WITH_YOUR_FORM_ID";
 
 /* ============================================================
    HELPERS
    ============================================================ */
 function isActive(itemHref: string, currentPath: string): boolean {
   const [itemPath] = itemHref.split("#");
-
-  // Home hanya aktif di root
   if (itemPath === "/") return currentPath === "/";
-
-  // Item yang punya hash (mis. /events#clubs) → aktif hanya kalau path cocok
-  // (hash tidak dipakai untuk highlighting karena sulit di-track tanpa router)
   return currentPath.startsWith(itemPath);
 }
 
@@ -66,6 +62,7 @@ export default function SiteHeader({
   setLang,
   currentPath,
   variant = "landing",
+  googleFormUrl = DEFAULT_FORM_URL,
 }: {
   lang: Language;
   setLang: (l: Language) => void;
@@ -76,7 +73,6 @@ export default function SiteHeader({
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
 
-  // Lock body scroll saat mobile menu terbuka
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -84,11 +80,10 @@ export default function SiteHeader({
     };
   }, [open]);
 
-  // CTA berbeda per variant
   const cta =
     variant === "landing"
       ? {
-          href: GOOGLE_FORM,
+          href: googleFormUrl,
           label: lang === "en" ? "Register Now" : "Daftar Sekarang",
           external: true,
         }
@@ -105,11 +100,16 @@ export default function SiteHeader({
           ============================================================ */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06070B]/70 border-b border-white/5">
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12 h-16 lg:h-20 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="shrink-0" aria-label="SQRL Home">
-            <span className="font-display italic text-3xl lg:text-4xl tracking-tight leading-none">
-              SQRL
-            </span>
+          {/* Logo — SQRL image */}
+          <Link href="/" className="shrink-0 flex items-center" aria-label="SQRL Home">
+            <Image
+              src="/images/sqrl-logo.png"
+              alt="SQRL"
+              width={400}
+              height={160}
+              priority
+              className="h-9 lg:h-11 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -133,9 +133,8 @@ export default function SiteHeader({
             })}
           </nav>
 
-          {/* Right: Lang toggle + CTA + Mobile menu button */}
+          {/* Right */}
           <div className="flex items-center gap-3">
-            {/* Language pill */}
             <div className="hidden sm:flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
               {(["en", "id"] as const).map((l) => (
                 <button
@@ -153,7 +152,6 @@ export default function SiteHeader({
               ))}
             </div>
 
-            {/* CTA */}
             {cta.external ? (
               <a
                 href={cta.href}
@@ -173,7 +171,6 @@ export default function SiteHeader({
               </Link>
             )}
 
-            {/* Mobile menu button */}
             <button
               onClick={() => setOpen(true)}
               className="lg:hidden w-10 h-10 grid place-items-center rounded-md border border-white/10 hover:bg-white/5 transition"
@@ -197,9 +194,22 @@ export default function SiteHeader({
             transition={{ duration: reduce ? 0 : 0.2 }}
             className="fixed inset-0 z-[100] bg-[#06070B] overflow-y-auto"
           >
-            {/* Top bar */}
+            {/* Top bar — SQRL image */}
             <div className="flex items-center justify-between px-5 h-16 border-b border-white/5">
-              <span className="font-display italic text-3xl">SQRL</span>
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="shrink-0 flex items-center"
+                aria-label="SQRL Home"
+              >
+                <Image
+                  src="/images/sqrl-logo.png"
+                  alt="SQRL"
+                  width={400}
+                  height={160}
+                  className="h-8 w-auto object-contain"
+                />
+              </Link>
               <button
                 onClick={() => setOpen(false)}
                 className="w-10 h-10 grid place-items-center rounded-md border border-white/10"

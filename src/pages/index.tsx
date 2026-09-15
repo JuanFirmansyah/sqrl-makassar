@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import {
@@ -7,19 +8,17 @@ import {
   ArrowUpRight,
   Calendar,
   ChevronDown,
-  Globe,
   MapPin,
-  Menu,
   Navigation,
   Radio,
   Sparkles,
   Timer,
   Trophy,
   Users,
-  X,
   Zap,
   BookMarked,
 } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
 
 /* ============================================================
    INSTAGRAM ICON (SVG — lucide removed it)
@@ -72,10 +71,10 @@ const EVENT = {
 };
 
 const LINKS = {
-  googleForm: "https://forms.gle/REPLACE_WITH_YOUR_FORM_ID",
+  googleForm: "https://forms.gle/1ARC5m1Go4pogJPG8",
   eventsPage: "/events",
   instagram: "https://www.instagram.com/sqrl.makassar",
-  whatsapp: "https://wa.me/6281234567890",
+  whatsapp: "https://wa.me/6282345006270",
   maps: "https://maps.google.com/?q=Lapangan+Karebosi+Makassar",
 };
 
@@ -190,7 +189,6 @@ const TEASERS = [
    3. I18N DICTIONARY
    ============================================================ */
 type Dict = {
-  nav: { home: string; events: string; clubs: string; contact: string };
   cta: {
     events: string;
     register: string;
@@ -228,7 +226,6 @@ type Dict = {
 
 const DICT: Record<Language, Dict> = {
   en: {
-    nav: { home: "Home", events: "Events", clubs: "Clubs", contact: "Contact" },
     cta: {
       events: "Enter Event Hub",
       register: "Register Now",
@@ -280,7 +277,6 @@ const DICT: Record<Language, Dict> = {
     },
   },
   id: {
-    nav: { home: "Home", events: "Event", clubs: "Klub", contact: "Kontak" },
     cta: {
       events: "Masuk ke Event Hub",
       register: "Daftar Sekarang",
@@ -350,171 +346,7 @@ function getStatus(now: Date = new Date()): EventStatus {
 }
 
 /* ============================================================
-   5. HEADER
-   ============================================================ */
-function Header({
-  lang,
-  setLang,
-  t,
-}: {
-  lang: Language;
-  setLang: (l: Language) => void;
-  t: Dict;
-}) {
-  const [open, setOpen] = useState(false);
-  const reduce = useReducedMotion();
-
-  const NAV = [
-    { key: "home" as const, href: "/", active: true },
-    { key: "events" as const, href: "/events" },
-    { key: "clubs" as const, href: "/events#clubs" },
-    { key: "contact" as const, href: "/contact" },
-  ];
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  return (
-    <>
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#06070B]/70 border-b border-white/5">
-        <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12 h-16 lg:h-20 flex items-center justify-between">
-          <Link href="/" className="shrink-0" aria-label="SQRL Home">
-            <span className="font-display italic text-3xl lg:text-4xl tracking-tight leading-none">
-              SQRL
-            </span>
-          </Link>
-
-          <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
-            {NAV.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={`relative text-[13px] font-semibold tracking-[0.15em] uppercase transition-colors ${
-                  item.active ? "text-white" : "text-white/60 hover:text-white"
-                }`}
-              >
-                {t.nav[item.key]}
-                {item.active && (
-                  <span className="absolute left-0 right-0 -bottom-2 h-[2px] bg-[#3B82F6] rounded-full" />
-                )}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
-              {(["en", "id"] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  aria-label={`Switch to ${l.toUpperCase()}`}
-                  className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase transition ${
-                    lang === l
-                      ? "bg-white text-black"
-                      : "text-white/60 hover:text-white"
-                  }`}
-                >
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            <a
-              href={LINKS.googleForm}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-2 rounded-md bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-[12px] tracking-widest uppercase px-5 py-2.5 transition shadow-lg shadow-blue-600/20"
-            >
-              {t.cta.register}
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
-
-            <button
-              onClick={() => setOpen(true)}
-              className="lg:hidden w-10 h-10 grid place-items-center rounded-md border border-white/10 hover:bg-white/5 transition"
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile overlay */}
-      <motion.div
-        initial={false}
-        animate={{ opacity: open ? 1 : 0, pointerEvents: open ? "auto" : "none" }}
-        transition={{ duration: reduce ? 0 : 0.25 }}
-        className="fixed inset-0 z-[100] bg-[#06070B] overflow-y-auto"
-        aria-hidden={!open}
-      >
-        <div className="flex items-center justify-between px-5 h-16 border-b border-white/5">
-          <span className="font-display italic text-3xl">SQRL</span>
-          <button
-            onClick={() => setOpen(false)}
-            className="w-10 h-10 grid place-items-center rounded-md border border-white/10"
-            aria-label="Close menu"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        <nav className="flex flex-col px-5 pt-6 gap-1" aria-label="Mobile">
-          {NAV.map((item, i) => (
-            <motion.div
-              key={item.key}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: open ? 1 : 0, x: open ? 0 : -20 }}
-              transition={{ delay: open && !reduce ? i * 0.05 : 0 }}
-            >
-              <Link
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={`block py-4 border-b border-white/5 font-display text-5xl italic tracking-tight ${
-                  item.active ? "text-[#3B82F6]" : "text-white/80"
-                }`}
-              >
-                {t.nav[item.key]}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
-        <div className="px-5 mt-6 flex flex-col gap-3 pb-10">
-          <div className="grid grid-cols-2 gap-3">
-            {(["en", "id"] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className={`py-4 rounded-xl border flex items-center justify-center gap-2 font-bold tracking-widest text-sm uppercase transition ${
-                  lang === l
-                    ? "bg-white text-black border-white"
-                    : "border-white/15 text-white/70"
-                }`}
-              >
-                <Globe className="w-4 h-4" />
-                {l === "en" ? "English" : "Indonesia"}
-              </button>
-            ))}
-          </div>
-          <a
-            href={LINKS.googleForm}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full py-4 rounded-xl bg-[#2563EB] text-center font-bold tracking-widest text-sm uppercase"
-          >
-            {t.cta.register}
-          </a>
-        </div>
-      </motion.div>
-    </>
-  );
-}
-
-/* ============================================================
-   6. HERO — full screen
+   5. HERO — pakai logo EIRC
    ============================================================ */
 function Hero({ lang, t }: { lang: Language; t: Dict }) {
   const reduce = useReducedMotion();
@@ -565,24 +397,21 @@ function Hero({ lang, t }: { lang: Language; t: Dict }) {
           </p>
         </motion.div>
 
-        {/* Massive title */}
-        <div className="relative">
-          <motion.h1
-            {...fade(0.1)}
-            className="font-display italic leading-[0.82] tracking-tight text-white text-[24vw] sm:text-[20vw] lg:text-[15vw] xl:text-[230px]"
-          >
-            <span className="block">EIRC</span>
-          </motion.h1>
-
-          <motion.div
-            {...fade(0.2)}
-            className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-10 mt-2 lg:mt-4"
-          >
-            <span className="font-display italic leading-[0.82] tracking-tight bg-gradient-to-r from-[#A5B4FC] via-[#67E8F9] to-[#FCD34D] bg-clip-text text-transparent text-[24vw] sm:text-[20vw] lg:text-[15vw] xl:text-[230px]">
-              2026
-            </span>
-          </motion.div>
-        </div>
+        {/* Logo EIRC (menggantikan tulisan "EIRC 2026") */}
+        <motion.div
+          {...fade(0.1)}
+          className="relative w-full max-w-[560px] sm:max-w-[720px] lg:max-w-[900px]"
+        >
+          <Image
+            src="/images/eirc-logo.png"
+            alt="EIRC 2026 — Eastern Indonesia Inline Race Championship"
+            width={1280}
+            height={640}
+            priority
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 80vw, 900px"
+            className="w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(59,130,246,0.35)]"
+          />
+        </motion.div>
 
         {/* Tagline row */}
         <motion.div
@@ -655,7 +484,7 @@ function Hero({ lang, t }: { lang: Language; t: Dict }) {
 }
 
 /* ============================================================
-   7. COUNTDOWN STRIP
+   6. COUNTDOWN STRIP
    ============================================================ */
 function CountdownStrip({ t }: { t: Dict }) {
   const [now, setNow] = useState<Date | null>(null);
@@ -741,7 +570,7 @@ function CountdownStrip({ t }: { t: Dict }) {
 }
 
 /* ============================================================
-   8. STATS
+   7. STATS
    ============================================================ */
 function Stats({ lang, t }: { lang: Language; t: Dict }) {
   const reduce = useReducedMotion();
@@ -778,7 +607,7 @@ function Stats({ lang, t }: { lang: Language; t: Dict }) {
 }
 
 /* ============================================================
-   9. PILLARS
+   8. PILLARS
    ============================================================ */
 function Pillars({ lang, t }: { lang: Language; t: Dict }) {
   const reduce = useReducedMotion();
@@ -831,7 +660,7 @@ function Pillars({ lang, t }: { lang: Language; t: Dict }) {
 }
 
 /* ============================================================
-   10. TEASERS
+   9. TEASERS
    ============================================================ */
 function Teasers({ lang, t }: { lang: Language; t: Dict }) {
   const reduce = useReducedMotion();
@@ -902,7 +731,7 @@ function Teasers({ lang, t }: { lang: Language; t: Dict }) {
 }
 
 /* ============================================================
-   11. LOCATION
+   10. LOCATION
    ============================================================ */
 function Location({ t }: { t: Dict }) {
   const reduce = useReducedMotion();
@@ -997,7 +826,7 @@ function Location({ t }: { t: Dict }) {
 }
 
 /* ============================================================
-   12. FINAL CTA
+   11. FINAL CTA
    ============================================================ */
 function FinalCta({ t }: { t: Dict }) {
   const reduce = useReducedMotion();
@@ -1066,7 +895,7 @@ function FinalCta({ t }: { t: Dict }) {
 }
 
 /* ============================================================
-   13. FOOTER
+   12. FOOTER — pakai logo SQRL
    ============================================================ */
 function Footer({ t }: { t: Dict }) {
   return (
@@ -1074,8 +903,16 @@ function Footer({ t }: { t: Dict }) {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-[1fr_auto] gap-10 pb-12 border-b border-white/10">
           <div className="max-w-md">
-            <p className="font-display italic text-6xl leading-none">SQRL</p>
-            <p className="mt-4 text-white/60">{t.footer.tagline}</p>
+            {/* Logo SQRL image (menggantikan tulisan "SQRL") */}
+            <Image
+              src="/images/sqrl-logo.png"
+              alt="SQRL"
+              width={400}
+              height={160}
+              sizes="(max-width: 768px) 60vw, 220px"
+              className="w-[180px] sm:w-[220px] h-auto object-contain"
+            />
+            <p className="mt-5 text-white/60">{t.footer.tagline}</p>
           </div>
           <nav className="grid grid-cols-2 sm:grid-cols-4 gap-x-10 gap-y-3 text-sm self-start lg:self-end">
             <Link href="/" className="text-white/60 hover:text-white transition">
@@ -1124,7 +961,7 @@ function Footer({ t }: { t: Dict }) {
 }
 
 /* ============================================================
-   14. PAGE
+   13. PAGE
    ============================================================ */
 export default function HomePage() {
   const [lang, setLangState] = useState<Language>("en");
@@ -1175,7 +1012,13 @@ export default function HomePage() {
       </Head>
 
       <div className="min-h-screen bg-[#06070B] text-white overflow-x-hidden font-body">
-        <Header lang={lang} setLang={setLang} t={t} />
+        <SiteHeader
+          lang={lang}
+          setLang={setLang}
+          currentPath="/"
+          variant="landing"
+          googleFormUrl={LINKS.googleForm}
+        />
         <main>
           <Hero lang={lang} t={t} />
           <CountdownStrip t={t} />
