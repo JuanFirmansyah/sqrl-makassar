@@ -48,7 +48,7 @@ const GOOGLE_FORM = "https://forms.gle/REPLACE_WITH_YOUR_FORM_ID";
    HELPERS
    ============================================================ */
 function isActive(itemHref: string, currentPath: string): boolean {
-  const [itemPath, itemHash] = itemHref.split("#");
+  const [itemPath] = itemHref.split("#");
 
   // Home hanya aktif di root
   if (itemPath === "/") return currentPath === "/";
