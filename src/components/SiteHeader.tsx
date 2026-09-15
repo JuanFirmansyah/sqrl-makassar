@@ -71,6 +71,7 @@ export default function SiteHeader({
   setLang: (l: Language) => void;
   currentPath: string;
   variant?: HeaderVariant;
+  googleFormUrl?: string;
 }) {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
