@@ -61,12 +61,12 @@ const LINKS = {
   maps: "https://maps.google.com/?q=Lapangan+Karebosi+Makassar",
 };
 
-// const EVENT_STATS = [
-//   { id: "clubs", value: "42", label: { en: "Registered Clubs", id: "Klub Terdaftar" } },
-//   { id: "athletes", value: "380+", label: { en: "Athletes", id: "Atlet" } },
-//   { id: "days", value: "3", label: { en: "Competition Days", id: "Hari Lomba" } },
-//   { id: "categories", value: "8+", label: { en: "Race Categories", id: "Kategori Lomba" } },
-// ];
+const EVENT_STATS = [
+  { id: "clubs", value: "42", label: { en: "Registered Clubs", id: "Klub Terdaftar" } },
+  { id: "athletes", value: "380+", label: { en: "Athletes", id: "Atlet" } },
+  { id: "days", value: "3", label: { en: "Competition Days", id: "Hari Lomba" } },
+  { id: "categories", value: "8+", label: { en: "Race Categories", id: "Kategori Lomba" } },
+];
 
 const EVENT_LINKS: Array<{
   id: string; eyebrow: L10n; title: L10n; description: L10n; cta: L10n;
@@ -301,28 +301,28 @@ function Hero() {
   );
 }
 
-// /* ============================================================
-//    7. EVENT STATS
-//    ============================================================ */
-// function Stats() {
-//   const { lang } = useLang();
-//   return (
-//     <section className="border-b border-white/5">
-//       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12 py-12 lg:py-16">
-//         <div className="grid grid-cols-2 lg:grid-cols-4 divide-white/5 lg:divide-x">
-//           {EVENT_STATS.map((s, i) => (
-//             <div key={s.id} className={`py-6 px-2 lg:px-8 ${i < 2 ? "border-b lg:border-b-0 border-white/5" : ""}`}>
-//               <p className="font-display italic text-5xl sm:text-6xl lg:text-7xl leading-none bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
-//                 {s.value}
-//               </p>
-//               <p className="mt-3 text-[11px] tracking-[0.25em] uppercase text-white/50">{s.label[lang]}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+/* ============================================================
+   7. EVENT STATS
+   ============================================================ */
+function Stats() {
+  const { lang } = useLang();
+  return (
+    <section className="border-b border-white/5">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12 py-12 lg:py-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-white/5 lg:divide-x">
+          {EVENT_STATS.map((s, i) => (
+            <div key={s.id} className={`py-6 px-2 lg:px-8 ${i < 2 ? "border-b lg:border-b-0 border-white/5" : ""}`}>
+              <p className="font-display italic text-5xl sm:text-6xl lg:text-7xl leading-none bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+                {s.value}
+              </p>
+              <p className="mt-3 text-[11px] tracking-[0.25em] uppercase text-white/50">{s.label[lang]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /* ============================================================
    8. EVENT HUB
@@ -638,7 +638,7 @@ export default function EventsPage() {
           googleFormUrl={LINKS.googleForm}
         />
         <Hero />
-        {/* <Stats /> */}
+        <Stats />
         <Hub />
         <Social />
         <Location />
