@@ -50,7 +50,7 @@ const EVENT = {
 const LINKS = {
   instagram: "https://www.instagram.com/sqrl.makassar",
   whatsapp: "https://wa.me/6282345006270",
-  googleForm: "https://forms.gle/1ARC5m1Go4pogJPG8",
+  googleForm: "https://docs.google.com/forms/d/e/1FAIpQLSfs3fwKDyzqL72JUJ-cXqKpDv31z71te8eHlBUOdIEcg7XL6g/viewform",
   liveRace: "/live-race",
   eCertificate: "/e-certificate",
   thbPdf: "/docs/eirc-2026-thb.pdf",
@@ -277,7 +277,7 @@ function Hero() {
           className="lg:col-span-5 relative aspect-[4/5] lg:aspect-[3/4] rounded-[28px] overflow-hidden border border-white/10 bg-gradient-to-br from-[#0F172A] via-[#0B0D14] to-[#111827]"
         >
           <Image
-            src="/images/eirc-2026-artwork.jpeg"
+            src="/images/eirc-2026-artworkk.jpeg"
             alt="EIRC 2026 official artwork"
             fill
             priority

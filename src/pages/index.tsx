@@ -71,7 +71,7 @@ const EVENT = {
 };
 
 const LINKS = {
-  googleForm: "https://forms.gle/1ARC5m1Go4pogJPG8",
+  googleForm: "https://docs.google.com/forms/d/e/1FAIpQLSfs3fwKDyzqL72JUJ-cXqKpDv31z71te8eHlBUOdIEcg7XL6g/viewform",
   eventsPage: "/events",
   instagram: "https://www.instagram.com/sqrl.makassar",
   whatsapp: "https://wa.me/6282345006270",
