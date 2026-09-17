@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowRight, ArrowUpRight, BookOpen, Calendar, Lock, MapPin,
-  MessageCircle, Navigation, Plus, Radio, Sparkles, Timer, Trophy,
+  ArrowRight, ArrowUpRight, BookOpen, Calendar, MapPin,
+  MessageCircle, Navigation, Plus, Sparkles,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -98,11 +98,6 @@ type Dict = {
     eyebrow: string; tagline: string;
     ctaPrimary: string; ctaSecondary: string; ctaRegister: string; ctaClosed: string;
   };
-  status: {
-    heading: string; upcoming: string; registrationClosed: string; live: string;
-    completed: string; days: string; hours: string; minutes: string; seconds: string;
-    sub: string; liveSub: string; completedSub: string;
-  };
   hub: { heading: string; sub: string; hint: string };
   social: { heading: string; igCta: string; twibbonCta: string };
   location: { heading: string; cta: string };
@@ -123,13 +118,6 @@ const DICT: Record<Language, Dict> = {
       ctaSecondary: "Registered Clubs",
       ctaRegister: "Register Now",
       ctaClosed: "Registration Closed",
-    },
-    status: {
-      heading: "Event Status", upcoming: "Event Starts In", registrationClosed: "Registration Closed",
-      live: "Live Now", completed: "Event Completed",
-      days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds",
-      sub: "Countdown to race weekend", liveSub: "Race day in progress — follow it live.",
-      completedSub: "Thanks for racing with us.",
     },
     hub: { heading: "Everything You Need", sub: "For race day", hint: "Quick access & data" },
     social: { heading: "Follow The Action", igCta: "Follow on Instagram", twibbonCta: "Get Twibbon" },
@@ -152,13 +140,6 @@ const DICT: Record<Language, Dict> = {
       ctaSecondary: "Klub Terdaftar",
       ctaRegister: "Daftar Sekarang",
       ctaClosed: "Pendaftaran Ditutup",
-    },
-    status: {
-      heading: "Status Event", upcoming: "Event Dimulai Dalam", registrationClosed: "Pendaftaran Ditutup",
-      live: "Sedang Berlangsung", completed: "Event Selesai",
-      days: "Hari", hours: "Jam", minutes: "Menit", seconds: "Detik",
-      sub: "Hitung mundur ke race weekend", liveSub: "Hari lomba sedang berlangsung — ikuti live.",
-      completedSub: "Terima kasih sudah berlomba bersama kami.",
     },
     hub: { heading: "Semua yang Kamu Butuhkan", sub: "Untuk race day", hint: "Akses cepat & data" },
     social: { heading: "Ikuti Keseruannya", igCta: "Follow di Instagram", twibbonCta: "Ambil Twibbon" },
@@ -190,8 +171,6 @@ function useLang() {
 /* ============================================================
    5. HELPERS
    ============================================================ */
-const pad = (n: number) => String(n).padStart(2, "0");
-
 function getEventStatus(now: Date = new Date()): EventStatus {
   const s = new Date(EVENT.startDate).getTime();
   const e = new Date(EVENT.endDate).getTime();
@@ -233,7 +212,6 @@ function Hero() {
             {t.hero.eyebrow}
           </motion.p>
 
-          {/* Logo EIRC menggantikan tulisan "EIRC 2026" */}
           <motion.div {...fade(0.1)} className="relative w-full max-w-[560px] lg:max-w-[640px]">
             <Image
               src="/images/eirc-logo.png"
@@ -324,96 +302,7 @@ function Hero() {
 }
 
 /* ============================================================
-   7. EVENT STATUS / COUNTDOWN
-   ============================================================ */
-function Status() {
-  const { t } = useLang();
-  const [now, setNow] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setNow(new Date());
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const status: EventStatus = useMemo(() => getEventStatus(now ?? new Date()), [now]);
-  if (!now) return null;
-
-  const target = status === "UPCOMING" ? new Date(EVENT.startDate) : new Date(EVENT.endDate);
-  const d = Math.max(0, target.getTime() - now.getTime());
-  const parts = {
-    days: Math.floor(d / 86400000),
-    hours: Math.floor((d % 86400000) / 3600000),
-    minutes: Math.floor((d % 3600000) / 60000),
-    seconds: Math.floor((d % 60000) / 1000),
-  };
-  const cells = [
-    { label: t.status.days, value: parts.days },
-    { label: t.status.hours, value: parts.hours },
-    { label: t.status.minutes, value: parts.minutes },
-    { label: t.status.seconds, value: parts.seconds },
-  ];
-
-  const headline =
-    status === "LIVE" ? t.status.live :
-    status === "COMPLETED" ? t.status.completed :
-    status === "REGISTRATION_CLOSED" ? t.status.registrationClosed :
-    t.status.upcoming;
-
-  const sub =
-    status === "LIVE" ? t.status.liveSub :
-    status === "COMPLETED" ? t.status.completedSub :
-    t.status.sub;
-
-  const Icon =
-    status === "LIVE" ? Radio :
-    status === "COMPLETED" ? Trophy :
-    status === "REGISTRATION_CLOSED" ? Lock : Timer;
-
-  return (
-    <section className="border-b border-white/5 bg-[#080A12]">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12 py-12 lg:py-16">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
-          <div className="flex-1">
-            <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/40 mb-3">
-              {t.status.heading}
-            </p>
-            <h2 className="flex items-center gap-3 font-display italic text-4xl sm:text-5xl lg:text-6xl leading-none">
-              <Icon className={`w-8 h-8 lg:w-10 lg:h-10 ${status === "LIVE" ? "text-[#EF4444] animate-pulse" : "text-[#FCD34D]"}`} />
-              {headline}
-            </h2>
-            <p className="mt-3 text-white/60 max-w-md">{sub}</p>
-          </div>
-
-          {(status === "UPCOMING" || status === "REGISTRATION_CLOSED") && (
-            <div className="grid grid-cols-4 gap-3 sm:gap-5">
-              {cells.map((c) => (
-                <div key={c.label} className="min-w-[70px] sm:min-w-[92px] rounded-2xl border border-white/10 bg-white/[0.03] px-3 sm:px-5 py-4 text-center">
-                  <div className="font-display italic text-4xl sm:text-5xl lg:text-6xl leading-none tabular-nums overflow-hidden h-[1em] relative">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      <motion.span
-                        key={c.value}
-                        initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }}
-                        transition={{ duration: 0.3 }}
-                        className="block"
-                      >
-                        {pad(c.value)}
-                      </motion.span>
-                    </AnimatePresence>
-                  </div>
-                  <p className="mt-2 text-[10px] tracking-[0.2em] uppercase text-white/50">{c.label}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ============================================================
-   8. EVENT STATS
+   7. EVENT STATS
    ============================================================ */
 function Stats() {
   const { lang } = useLang();
@@ -436,7 +325,7 @@ function Stats() {
 }
 
 /* ============================================================
-   9. EVENT HUB
+   8. EVENT HUB
    ============================================================ */
 const PALETTE: Record<HubColor, { bg: string; text: string; sub: string; eyebrow: string; badge: string; cta: string }> = {
   blue: { bg: "bg-[#A5B4FC]", text: "text-[#1E1B4B]", sub: "text-[#1E1B4B]/70", eyebrow: "text-[#1E1B4B]/60", badge: "bg-[#1E1B4B]/10 text-[#1E1B4B]", cta: "text-[#1E1B4B]" },
@@ -517,7 +406,7 @@ function Hub() {
 }
 
 /* ============================================================
-   10. SOCIAL / COMMUNITY
+   9. SOCIAL / COMMUNITY
    ============================================================ */
 function Social() {
   const { t } = useLang();
@@ -553,7 +442,7 @@ function Social() {
 }
 
 /* ============================================================
-   11. LOCATION
+   10. LOCATION
    ============================================================ */
 function Location() {
   const { t } = useLang();
@@ -596,7 +485,7 @@ function Location() {
 }
 
 /* ============================================================
-   12. FAQ
+   11. FAQ
    ============================================================ */
 function FAQ() {
   const { lang, t } = useLang();
@@ -647,7 +536,7 @@ function FAQ() {
 }
 
 /* ============================================================
-   13. FOOTER — pakai logo image EIRC
+   12. FOOTER — pakai logo SQRL
    ============================================================ */
 function Footer() {
   const { t } = useLang();
@@ -664,16 +553,15 @@ function Footer() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-[1fr_auto] gap-10 pb-12 border-b border-white/10">
           <div className="max-w-md">
-            {/* Logo EIRC menggantikan tulisan "SQRL" */}
             <Image
               src="/images/sqrl-logo.png"
-              alt="EIRC 2026"
+              alt="SQRL"
               width={400}
-              height={200}
-              sizes="(max-width: 768px) 60vw, 240px"
+              height={160}
+              sizes="(max-width: 768px) 60vw, 220px"
               className="w-[180px] sm:w-[220px] h-auto object-contain"
             />
-            <p className="mt-4 text-white/60">{t.footer.tagline}</p>
+            <p className="mt-5 text-white/60">{t.footer.tagline}</p>
           </div>
           <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-10 gap-y-3 text-sm self-start lg:self-end">
             {links.map((l) => (
@@ -696,7 +584,7 @@ function Footer() {
 }
 
 /* ============================================================
-   14. PAGE
+   13. PAGE
    ============================================================ */
 export default function EventsPage() {
   const [lang, setLangState] = useState<Language>("en");
@@ -750,7 +638,6 @@ export default function EventsPage() {
           googleFormUrl={LINKS.googleForm}
         />
         <Hero />
-        <Status />
         <Stats />
         <Hub />
         <Social />

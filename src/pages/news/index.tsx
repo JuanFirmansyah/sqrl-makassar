@@ -215,7 +215,7 @@ function InstagramIcon({ className }: { className?: string }) {
 /* ============================================================
    HERO
    ============================================================ */
-function Hero({ lang, t }: { lang: Language; t: Dict }) {
+function Hero({ t }: { t: Dict }) {
   const reduce = useReducedMotion();
   return (
     <section className="relative overflow-hidden border-b border-white/5 pt-16 lg:pt-20">
@@ -464,7 +464,7 @@ export default function NewsPage() {
         />
 
         <main>
-          <Hero lang={lang} t={t} />
+          <Hero t={t} />
 
           {/* Featured */}
           <section className="border-b border-white/5 py-16 lg:py-20">
