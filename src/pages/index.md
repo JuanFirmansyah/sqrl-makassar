@@ -78,28 +78,28 @@ const LINKS = {
   maps: "https://maps.google.com/?q=Lapangan+Karebosi+Makassar",
 };
 
-// const STATS = [
-//   {
-//     id: "clubs",
-//     value: "42",
-//     label: { en: "Registered Clubs", id: "Klub Terdaftar" } as L10n,
-//   },
-//   {
-//     id: "athletes",
-//     value: "380+",
-//     label: { en: "Athletes", id: "Atlet" } as L10n,
-//   },
-//   {
-//     id: "days",
-//     value: "3",
-//     label: { en: "Race Days", id: "Hari Lomba" } as L10n,
-//   },
-//   {
-//     id: "categories",
-//     value: "8+",
-//     label: { en: "Categories", id: "Kategori" } as L10n,
-//   },
-// ];
+const STATS = [
+  {
+    id: "clubs",
+    value: "42",
+    label: { en: "Registered Clubs", id: "Klub Terdaftar" } as L10n,
+  },
+  {
+    id: "athletes",
+    value: "380+",
+    label: { en: "Athletes", id: "Atlet" } as L10n,
+  },
+  {
+    id: "days",
+    value: "3",
+    label: { en: "Race Days", id: "Hari Lomba" } as L10n,
+  },
+  {
+    id: "categories",
+    value: "8+",
+    label: { en: "Categories", id: "Kategori" } as L10n,
+  },
+];
 
 const PILLARS = [
   {
@@ -570,6 +570,43 @@ function CountdownStrip({ t }: { t: Dict }) {
 }
 
 /* ============================================================
+   7. STATS
+   ============================================================ */
+function Stats({ lang, t }: { lang: Language; t: Dict }) {
+  const reduce = useReducedMotion();
+  return (
+    <section className="border-b border-white/5 py-16 lg:py-20">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
+        <div className="flex items-center gap-4 mb-10 lg:mb-14">
+          <span className="h-[1px] w-10 bg-[#A5B4FC]/60" />
+          <h2 className="text-[11px] font-bold tracking-[0.35em] uppercase text-[#A5B4FC]">
+            {t.stats.heading}
+          </h2>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {STATS.map((s, i) => (
+            <motion.div
+              key={s.id}
+              initial={{ opacity: 0, y: reduce ? 0 : 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+            >
+              <p className="font-display italic text-6xl sm:text-7xl lg:text-8xl leading-none bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent">
+                {s.value}
+              </p>
+              <p className="mt-4 text-[11px] tracking-[0.25em] uppercase text-white/50">
+                {s.label[lang]}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
    8. PILLARS
    ============================================================ */
 function Pillars({ lang, t }: { lang: Language; t: Dict }) {
@@ -985,6 +1022,7 @@ export default function HomePage() {
         <main>
           <Hero lang={lang} t={t} />
           <CountdownStrip t={t} />
+          <Stats lang={lang} t={t} />
           <Pillars lang={lang} t={t} />
           <Teasers lang={lang} t={t} />
           <Location t={t} />
