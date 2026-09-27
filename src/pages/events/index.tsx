@@ -56,7 +56,7 @@ const LINKS = {
   thbPdf: "/docs/eirc-2026-thb.pdf",
   athleteBookPdf: "/docs/eirc-2026-athlete-book.pdf",
   raceBookPdf: "/docs/eirc-2026-race-book.pdf",
-  twibbon: "/twibbon",
+  twibbon: "/twibbon.png",
   liveStream: "https://www.youtube.com/@sqrl.makassar",
   maps: "https://maps.google.com/?q=Lapangan+Karebosi+Makassar",
 };
